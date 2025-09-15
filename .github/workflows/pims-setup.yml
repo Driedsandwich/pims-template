@@ -32,6 +32,15 @@ jobs:
             const fs = require('fs');
             const yaml = require('js-yaml');
             
+            // Install js-yaml if not available
+            if (!yaml.load) {
+              const { execSync } = require('child_process');
+              execSync('npm install js-yaml', { stdio: 'inherit' });
+              delete require.cache[require.resolve('js-yaml')];
+              const yamlNew = require('js-yaml');
+              Object.assign(yaml, yamlNew);
+            }
+            
             try {
               const labelsFile = fs.readFileSync('.github/labels.yml', 'utf8');
               const labels = yaml.load(labelsFile);
@@ -81,3 +90,25 @@ jobs:
           echo "- pims-setup.yml: Initial PIMS setup"
           echo "- pims-ci.yml: Continuous integration"
           echo "- pims-knowledge.yml: Knowledge accumulation automation"
+          
+          # Create .cursor/rules directory if it doesn't exist
+          mkdir -p .cursor/rules
+          
+          # Create initial knowledge.mdc if it doesn't exist
+          if [ ! -f ".cursor/rules/knowledge.mdc" ]; then
+            cat > .cursor/rules/knowledge.mdc << 'EOF'
+# PIMS知識蓄積ファイル
+
+## 更新履歴
+- $(date): PIMS初期化
+
+## 成功パターン
+
+## 失敗パターン
+
+## 再発防止ルール
+EOF
+            echo "✅ Created initial knowledge.mdc file"
+          else
+            echo "ℹ️ knowledge.mdc already exists"
+          fi
