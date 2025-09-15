@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: PIMS 運用ガイド
+    url: https://github.com/Driedsandwich/pims-template/blob/main/PDCA_ISSUE_USAGE_GUIDE.md
+    about: PIMS（PDCA-Issue Muramasa System）の詳しい使い方はこちら
